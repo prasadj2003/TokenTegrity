@@ -45,7 +45,7 @@ app.get("/get-metadata", async (req: any, res: any) => {
     const nftContract = new web3.eth.Contract(erc721Abi, checksumAddress);
 
     try {
-        const tokenUri: String = await nftContract.methods.tokenURI(tokenId).call();
+        const tokenUri: string = await nftContract.methods.tokenURI(tokenId).call();
         console.log(`Token URI: ${tokenUri}`);
 
         let metadataUri = tokenUri;
@@ -53,16 +53,62 @@ app.get("/get-metadata", async (req: any, res: any) => {
             metadataUri = tokenUri.replace('ipfs://', 'https://ipfs.io/ipfs/');
         }
 
-        if (typeof metadataUri === 'string') {
-            const response = await axios.get(metadataUri);
-            const metadata = response.data;
-            console.log(metadata);
-            res.status(200).json({
-                metadata: metadata.attributes.toString()
-            });
-        } else {
-            throw new Error('Invalid metadata URI');
+        function validateMetadata(metadata: any): string[] {
+            let errors: string[] = [];
+        
+            // Check if required fields exist
+            if (!metadata.image || metadata.image.trim() === "") {
+                errors.push("Missing or empty 'image' field");
+            }
+        
+            if (!metadata.attributes || metadata.attributes.length === 0) {
+                errors.push("Missing 'attributes' field or it's empty");
+            } else {
+                // Check each attribute for completeness
+                metadata.attributes.forEach((attribute: any, index: number) => {
+                    if (!attribute.trait_type || attribute.trait_type.trim() === "") {
+                        errors.push(`Missing or empty 'trait_type' at index ${index}`);
+                    }
+                    if (!attribute.value || attribute.value.trim() === "") {
+                        errors.push(`Missing or empty 'value' at index ${index}`);
+                    }
+                });
+            }
+        
+            return errors;
         }
+        
+        function checkDuplicateAttributes(attributes: any[]): string[] {
+            let errors: string[] = [];
+            let traitSet = new Set();
+        
+            metadata.attributes.forEach((attribute: any, index: any) => {
+                if (traitSet.has(attribute.trait_type)) {
+                    errors.push(`Duplicate trait_type: ${attribute.trait_type} at index ${index}`);
+                } else {
+                    traitSet.add(attribute.trait_type);
+                }
+            });
+        
+            return errors;
+        }
+        
+
+       
+        const response = await axios.get(metadataUri);
+        const metadata = response.data;
+        console.log(metadata);
+        const validationErrors = validateMetadata(metadata);
+        const duplicationErrors = checkDuplicateAttributes(metadata)
+        if (validationErrors.length > 0 || duplicationErrors.length > 0) {
+            return res.status(400).json({ errors: validationErrors });
+        }
+        res.status(200).json({
+            // metadata: metadata.attributes.toString()
+            msg: "No validation errors & duplication errors found in NFT Metadata",
+            metadata: metadata.attributes.map((data: any) => ({ trait_type: data.trait_type, value: data.value }))
+        });
+        
 
     } catch (error) {
         if (error instanceof Error) {
