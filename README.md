@@ -40,6 +40,7 @@
 4. **Future Prospects**
    We aim to deploy TokenIntegrity as an API which people can incorporate in their code and validate NFT metadata. Example usage is provided below
 
+
 ```javascript
 // Example Usage
 import TokenTegrityAPI from 'tokentegrity-sdk'
@@ -52,18 +53,25 @@ const metadata = {
 
 TokenTegrityAPI.validate(metadata).then(report => console.log(report));
 ```
+--- 
+## images
+![Landing](image.png)
+![Meet us](image-1.png)
+--- 
 
-## 🔒 Why Choose TokenTegrity?**
+## 🔒 Why Choose TokenTegrity?
 - Enhanced Security: Built on blockchain for maximum reliability.
 - User-Friendly Interface: Intuitive design for both developers and artists.
 - Accurate Reports: Instant, comprehensive reports for quick issue resolution.
 - Interoperability: Works seamlessly with popular NFT standards and marketplaces.
+---
 
-## 📈 Roadmap **
+## 📈 Roadmap 
 - Phase 1: MVP Launch - Metadata Validation 
 - Phase 2: Expand Blockchain Support (Q1 2025)
 - Phase 3: deploy as API
+---
 
-## 🌍 Get Started**
+## 🌍 Get Started
 Ready to validate your NFT metadata with TokenTegrity? Sign Up Now to access the future of digital asset validation.
 
