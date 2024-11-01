@@ -18,6 +18,7 @@ const cors_1 = __importDefault(require("cors"));
 const axios_1 = __importDefault(require("axios"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
+app.use(express_1.default.json());
 const web3 = new web3_1.default("https://flashy-snowy-butterfly.quiknode.pro/42fd45c1e82f1d3132ebee9f06513052c7524e84/");
 app.get("/general", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     function fetchBlockNumber() {
@@ -48,8 +49,8 @@ app.get("/get-metadata", (req, res) => __awaiter(void 0, void 0, void 0, functio
             type: 'function',
         },
     ];
-    const contractAddress = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
-    const tokenId = 4824;
+    const contractAddress = req.query.contractAddress;
+    const tokenId = req.query.tokenId;
     const checksumAddress = web3.utils.toChecksumAddress(contractAddress);
     const nftContract = new web3.eth.Contract(erc721Abi, checksumAddress);
     try {
@@ -105,6 +106,7 @@ app.get("/get-metadata", (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(200).json({
             // metadata: metadata.attributes.toString()
             msg: "No validation errors & duplication errors found in NFT Metadata",
+            image_url: "https://ipfs.io/ipfs/" + metadata.image.substring(metadata.image.indexOf('Q')),
             metadata: metadata.attributes.map((data) => ({ trait_type: data.trait_type, value: data.value }))
         });
     }

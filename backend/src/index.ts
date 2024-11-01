@@ -5,6 +5,7 @@ import axios from "axios";
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const web3 = new Web3("https://flashy-snowy-butterfly.quiknode.pro/42fd45c1e82f1d3132ebee9f06513052c7524e84/");
 
@@ -38,8 +39,8 @@ app.get("/get-metadata", async (req: any, res: any) => {
         },
     ];
 
-    const contractAddress = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
-    const tokenId = 4824;
+    const contractAddress = req.query.contractAddress;
+    const tokenId = req.query.tokenId;
 
     const checksumAddress = web3.utils.toChecksumAddress(contractAddress);
     const nftContract = new web3.eth.Contract(erc721Abi, checksumAddress);
@@ -106,6 +107,7 @@ app.get("/get-metadata", async (req: any, res: any) => {
         res.status(200).json({
             // metadata: metadata.attributes.toString()
             msg: "No validation errors & duplication errors found in NFT Metadata",
+            image_url: "https://ipfs.io/ipfs/" + metadata.image.substring(metadata.image.indexOf('Q')),
             metadata: metadata.attributes.map((data: any) => ({ trait_type: data.trait_type, value: data.value }))
         });
         
