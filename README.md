@@ -57,7 +57,10 @@ TokenTegrityAPI.validate(metadata).then(report => console.log(report));
 ## images
 ![Landing](image.png)
 ![Meet us](image-1.png)
-![MVP video](Vite + React + TS - Google Chrome 2024-11-01 22-22-11.mp4)
+<video width="320" height="240" controls>
+  <source src="video_demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 --- 
 
 ## 🔒 Why Choose TokenTegrity?
