@@ -57,10 +57,7 @@ TokenTegrityAPI.validate(metadata).then(report => console.log(report));
 ## images
 ![Landing](image.png)
 ![Meet us](image-1.png)
-<video width="320" height="240" controls>
-  <source src="video_demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+![TokenTegrity Demo](video_demo.mp4)
 --- 
 
 ## 🔒 Why Choose TokenTegrity?
